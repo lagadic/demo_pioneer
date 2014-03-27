@@ -1,0 +1,31 @@
+<!-- -*- xml -*- -->
+<launch>
+  <!-- 
+
+    Allows to teleoperate a real Pioneer mobile robot using
+    a Logitech wireless F710 gamepad.
+
+  -->
+
+  <!-- Launch the node that allows to control the gamepad -->
+  <!-- % rosrun joy joy_node _dev:=/dev/input/js0 _deadzone:=0.12 --> 
+  <node respawn="true" pkg="joy" type="joy_node" name="gamepad" >
+    <param name="dev" type="string" value="/dev/input/js0" />
+    <param name="deadzone" value="0.12" />
+  </node>
+
+  <!-- Joystick to pioneer robot -->
+  <node name="demo_pioneer_joy2twist_node" pkg="demo_pioneer" type="demo_pioneer_joy2twist_node">
+  </node>
+
+  <!-- 
+      Pioneer robot driver
+      Subscribe on topic /RosAria/cmd_vel 
+  <include file="$(optenv ROS_WORKSPACE)/mylaunch/pioneer-rosaria.launch"/>
+  -->
+  <!-- % rosrun ROSARIA RosAria _port:=/dev/ttyUSB0  -->
+  <node pkg="rosaria" type="RosAria" name="RosAria"> 
+     <param name="port" value="/dev/ttyUSB0" />
+  </node>
+
+</launch>
