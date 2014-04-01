@@ -1,0 +1,55 @@
+<!-- -*- xml -*- -->
+<launch>
+  <param name="/camera_prefix" type="string" value="/" />
+		
+  <!-- Launch the firewire camera acquisition node -->
+  <node pkg="camera1394" type="camera1394_node" name="my_camera1394_node" args="_video_mode:=640x480_rgb8" >
+    <param name="camera_info_url" value="package://visp_auto_tracker/models/calibration.ini" type="string" />
+    <param name="frame_id" value="/map" type="string" />
+    <remap from="/camera/image_raw" to="/image_rect"/>
+    <remap from="/camera/camera_info" to="/camera_info"/>
+  </node>
+
+  <!-- Launch the tracking node -->
+  <node pkg="visp_auto_tracker" type="visp_auto_tracker" name="visp_auto_tracker">
+    <param name="model_path" type="string" value="$(find visp_auto_tracker)/models" />
+    <param name="model_name" type="string" value="pattern" />
+    <param name="debug_display" value="True" />
+	      
+    <remap from="/visp_auto_tracker/camera_info" to="/camera_info"/>
+    <remap from="/visp_auto_tracker/image_raw" to="/image_rect"/>	
+  </node>
+
+  <!-- Launch the viewer -->
+  <!-- node pkg="visp_tracker" type="visp_tracker_viewer" name="tracker_mbt_viewer" args="_camera_prefix:=/" output="screen">
+     <remap from="/object_position_covariance" to="/visp_auto_tracker/object_position_covariance" />
+  </node -->
+
+  <!-- % rosrun demo_pioneer demo_pioneer_visual_servo_pioneer_pan_node --> 
+  <node respawn="true" pkg="demo_pioneer" type="demo_pioneer_visual_servo_pioneer_pan_node" name="demo_pioneer_visual_servo_pioneer_pan_node" output="screen">
+     <remap from="/object_position" to="/visp_auto_tracker/object_position" />
+  </node>
+
+  <!-- Launch the node that allows to control the gamepad -->
+  <!-- % rosrun joy joy_node _dev:=/dev/input/js0 _deadzone:=0.12 --> 
+  <node respawn="true" pkg="joy" type="joy_node" name="gamepad" >
+    <param name="dev" type="string" value="/dev/input/js0" />
+    <param name="deadzone" value="0.12" />
+  </node>
+
+  <!-- 
+      Pioneer robot driver
+      Subscribe on topic /RosAria/cmd_vel 
+  <include file="$(optenv ROS_WORKSPACE)/mylaunch/pioneer-rosaria.launch"/>
+  -->
+  <!-- % rosrun ROSARIA RosAria _port:=/dev/ttyUSB0  -->
+  <node pkg="rosaria" type="RosAria" name="RosAria"> 
+     <param name="port" value="/dev/ttyUSB1" />
+  </node>
+
+  <!-- Joystick to pioneer+pan robot -->
+  <node name="demo_pioneer_joy2twist_pioneer_pan_node" pkg="demo_pioneer" type="demo_pioneer_joy2twist_pioneer_pan_node">
+     <remap from="/biclops/cmd_vel" to="/visp_ros_biclops_node/cmd_vel" />
+  </node>
+
+</launch>
