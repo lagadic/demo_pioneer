@@ -15,7 +15,7 @@
   </node>
 
   <!-- Joystick to pioneer robot -->
-  <node name="demo_pioneer_joy2twist_node" pkg="demo_pioneer" type="demo_pioneer_joy2twist_node">
+  <node name="demo_pioneer_joy2twist_pioneer_node" pkg="demo_pioneer" type="demo_pioneer_joy2twist_pioneer_node">
   </node>
 
   <!-- 

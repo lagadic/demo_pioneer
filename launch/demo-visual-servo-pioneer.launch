@@ -21,9 +21,11 @@
   </node>
 
   <!-- Launch the viewer -->
-  <node pkg="visp_tracker" type="visp_tracker_viewer" name="tracker_mbt_viewer" args="_camera_prefix:=/" output="screen" />
+  <!-- node pkg="visp_tracker" type="visp_tracker_viewer" name="visp_tracker_viewer" args="_camera_prefix:=/" output="screen">
+     <remap from="/object_position_covariance" to="/visp_auto_tracker/object_position_covariance" />
+  </node -->
 
-  <!-- % rosrun pioneer-vs vs --> 
+  <!-- % rosrun demo_pioneer demo_pioneer_visual_servo_pioneer_node --> 
   <node respawn="true" pkg="demo_pioneer" type="demo_pioneer_visual_servo_pioneer_node" name="demo_pioneer_visual_servo_pioneer_node" output="screen">
      <remap from="/object_position" to="/visp_auto_tracker/object_position" />
      <remap from="/vs/pioneer/cmd_vel" to="/cmd_vel" />
@@ -47,7 +49,7 @@
   </node>
 
   <!-- Joystick to pioneer robot -->
-  <node name="demo_pioneer_joy2twist_node" pkg="demo_pioneer" type="demo_pioneer_joy2twist_node">
+  <node name="demo_pioneer_joy2twist_pioneer_node" pkg="demo_pioneer" type="demo_pioneer_joy2twist_pioneer_node">
   </node>
  
 </launch>
