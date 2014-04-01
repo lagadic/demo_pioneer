@@ -104,20 +104,20 @@ include_directories(
 # )
 
 ## Declare a cpp executable
-add_executable(demo_pioneer_joy2twist_node src/joy2twist.cpp)
+add_executable(demo_pioneer_joy2twist_pioneer_node src/joy2twist_pioneer.cpp)
+add_executable(demo_pioneer_joy2twist_pioneer_pan_node src/joy2twist_pioneer_pan.cpp)
 add_executable(demo_pioneer_visual_servo_pioneer_node src/visual_servo_pioneer.cpp)
+add_executable(demo_pioneer_visual_servo_pioneer_pan_node src/visual_servo_pioneer_pan.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(demo_pioneer_node demo_pioneer_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
-target_link_libraries(demo_pioneer_joy2twist_node
-  ${catkin_LIBRARIES}
-)
-target_link_libraries(demo_pioneer_visual_servo_pioneer_node
-  ${catkin_LIBRARIES}
-)
+target_link_libraries(demo_pioneer_joy2twist_pioneer_node ${catkin_LIBRARIES})
+target_link_libraries(demo_pioneer_joy2twist_pioneer_pan_node ${catkin_LIBRARIES})
+target_link_libraries(demo_pioneer_visual_servo_pioneer_node ${catkin_LIBRARIES})
+target_link_libraries(demo_pioneer_visual_servo_pioneer_pan_node ${catkin_LIBRARIES})
 
 #############
 ## Install ##
@@ -134,7 +134,12 @@ target_link_libraries(demo_pioneer_visual_servo_pioneer_node
 # )
 
 ## Mark executables and/or libraries for installation
-install(TARGETS demo_pioneer_joy2twist_node demo_pioneer_visual_servo_pioneer_node
+install(
+  TARGETS 
+    demo_pioneer_joy2twist_pioneer_node 
+    demo_pioneer_joy2twist_pioneer_pan_node 
+    demo_pioneer_visual_servo_pioneer_node
+    demo_pioneer_visual_servo_pioneer_pan_node
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
@@ -151,6 +156,7 @@ install(TARGETS demo_pioneer_joy2twist_node demo_pioneer_visual_servo_pioneer_no
 install(FILES
   launch/pioneer-teleop.launch
   launch/demo-visual-servo-pioneer.launch
+  launch/demo-visual-servo-pioneer-pan.launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 

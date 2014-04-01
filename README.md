@@ -3,6 +3,7 @@ demo_pioneer
 
 A set of demos using a Pioneer robot and based on ViSP
 
+# Installation
 
 ## Get the source
 
@@ -33,10 +34,13 @@ Get demo_pioneer stack that does the visual servoing
 
 	$ cd ~/catkin_ws
 	$ catkin_make -DCMAKE_BUILD_TYPE=Release --pkg rosaria
+	$ catkin_make -DCMAKE_BUILD_TYPE=Release --pkg visp_tracker
 	$ catkin_make -DCMAKE_BUILD_TYPE=Release --pkg visp_auto_tracker
 	$ catkin_make -DCMAKE_BUILD_TYPE=Release --pkg demo_pioneer
 
-## How to run
+# Usage
+
+## Test pioneer tele operation from gamepad
 
 Check if you have the read/write rights in /dev/ttyUSB0. If not
 
@@ -51,9 +55,31 @@ First check if the Pioneer can be tele operated
 	$ source ~/catkin_ws/devel/setup.bash
 	$ roslaunch demo_pioneer pioneer-teleop.launch
 
+## Start the visual servoing demo on the Pioneer
 
 Then start the demo with a real Pioneer robot using:
 
 	$ source ~/catkin_ws/devel/setup.bash
 	$ roslaunch demo_pioneer demo-visual-servo-pioneer.launch
+
+# Usage only in the lab where the Pioneer is equipped with a Biclops PT head
+ 
+## Prerequisities
+
+Get visp_ros stack that does the control of the Biclops head using ViSP vpRobotBiclops class, a wrapper over Biclops low level controller that is not open source 
+
+	$ cd ~/catkin_ws/src
+	$ git clone https://github.com/lagadic/visp_ros.git (master branch)
+	$ cd ~/catkin_ws
+	$ catkin_make -DCMAKE_BUILD_TYPE=Release --pkg visp_ros
+
+## Start the visual servoing demo on the Pioneer equipped with a Biclops PT head
+
+Then start the demo with a real Pioneer robot using:
+
+	$ source ~/catkin_ws/devel/setup.bash
+	$ roslaunch visp_ros biclops.launch
+	$ roslaunch demo_pioneer demo-visual-servo-pioneer-pan.launch
+
+
 
