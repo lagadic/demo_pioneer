@@ -71,7 +71,7 @@ VS::VS(int argc, char**argv)
   subStatus_ = nh_.subscribe("/visp_auto_tracker/status", 1000, &VS::statusCallback, this);
   pubTwist_  = nh_.advertise<geometry_msgs::Twist>("vs/pioneer/cmd_vel", 1000);
   // Subscribe to the topic Camera info in order to receive the camera paramenter. The callback function will be called only one time.
-  sub_cam_info = nh_.subscribe("/vrep/camera_info", 1000,&VS::CameraInfoCb,this);
+  sub_cam_info = nh_.subscribe("/camera_info", 1000,&VS::CameraInfoCb,this);
 
   depth = 0.4;
   lambda = 1.;
