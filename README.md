@@ -1,7 +1,7 @@
 demo_pioneer
 ============
 
-A set of demos using a Pioneer robot and based on ViSP. This package is documented on [demo_pioneer-wiki].
+A set of demos using a Pioneer robot and based on ViSP. This package is documented on [ROS wiki] [demo_pioneer-wiki].
 
 # Installation
 
