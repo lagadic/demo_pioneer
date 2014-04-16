@@ -20,7 +20,10 @@
 
   <run_depend>rosconsole</run_depend>
   <run_depend>roscpp</run_depend>
+  <run_depend>visp_auto_tracker</run_depend>
   <run_depend>visp_bridge</run_depend>
+  <run_depend>joy</run_depend>
+  <run_depend>camera1394</run_depend>
 
   <buildtool_depend>catkin</buildtool_depend>
 
