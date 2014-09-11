@@ -4,6 +4,8 @@
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <visp_bridge/3dpose.h>
+#include <visp_bridge/camera.h>
+#include <sensor_msgs/CameraInfo.h>
 
 #include <visp/vpAdaptiveGain.h>
 #include <visp/vpCameraParameters.h>
@@ -24,13 +26,17 @@ private:
   ros::Publisher  pubTwist_; // cmd_vel
   ros::Subscriber subPose_;  // pose_stamped
   ros::Subscriber subStatus_;  // pose_stamped
+  ros::Subscriber sub_cam_info; // Camera parameters
 
   vpServo task;
   // Current and desired visual feature associated to the x coordinate of the point
   vpFeaturePoint s_x, s_xd;
   vpFeatureDepth s_Z, s_Zd;
 
+
+
   vpCameraParameters cam;
+  bool Stream_info_camera; //Is equal to one if we received the information about the camera
   double depth;
   double Z, Zd;
   double lambda;
@@ -50,6 +56,7 @@ public:
   void init_vs();
   void poseCallback(const geometry_msgs::PoseStampedConstPtr& msg);
   void statusCallback(const std_msgs::Int8ConstPtr& msg);
+  void CameraInfoCb(const sensor_msgs::CameraInfo& msg);
   VS(int argc, char**argv);
   virtual ~VS() {
     task.kill();
@@ -58,19 +65,20 @@ public:
 
 VS::VS(int argc, char**argv)
 {
-  init_vs();
+  //init_vs();
 
   subPose_   = nh_.subscribe("/visp_auto_tracker/object_position", 1000, &VS::poseCallback, this);
   subStatus_ = nh_.subscribe("/visp_auto_tracker/status", 1000, &VS::statusCallback, this);
   pubTwist_  = nh_.advertise<geometry_msgs::Twist>("vs/pioneer/cmd_vel", 1000);
-}
+  // Subscribe to the topic Camera info in order to receive the camera paramenter. The callback function will be called only one time.
+  sub_cam_info = nh_.subscribe("/camera_info", 1000,&VS::CameraInfoCb,this);
 
-void VS::init_vs()
-{
   depth = 0.4;
   lambda = 1.;
   valid_pose = false;
   valid_pose_prev = false;
+
+  Stream_info_camera = 0;
 
   Z = Zd = depth;
 
@@ -79,9 +87,19 @@ void VS::init_vs()
   v = 0; vi = 0;
   mu = 4;
 
+  t_start_loop = 0.0;
+  tinit = 0.0;
+}
+
+void VS::init_vs()
+{
+
+
+  //cam.initPersProjWithoutDistortion(800, 795, 320, 216);
+
+
   lambda_adapt.initStandard(3, 0.2, 40);
 
-  cam.initPersProjWithoutDistortion(800, 795, 320, 216);
 
   task.setServo(vpServo::EYEINHAND_L_cVe_eJe) ;
   task.setInteractionMatrixType(vpServo::DESIRED, vpServo::PSEUDO_INVERSE) ;
@@ -122,6 +140,14 @@ void VS::statusCallback(const std_msgs::Int8ConstPtr& msg)
 
 void VS::poseCallback(const geometry_msgs::PoseStampedConstPtr& msg)
 {
+
+	if (!Stream_info_camera ) // We check if the streaming of images is started or not
+	  {
+		std::cout << "Waiting for the camera parameters."<<std::endl;
+	     return;
+	  }
+
+
   geometry_msgs::Twist out_cmd_vel;
   try {
     t_start_loop = vpTime::measureTimeMs();
@@ -216,6 +242,25 @@ void VS::poseCallback(const geometry_msgs::PoseStampedConstPtr& msg)
     pubTwist_.publish(out_cmd_vel);
   }
 }
+
+
+void VS::CameraInfoCb(const sensor_msgs::CameraInfo& msg)
+ {
+	  std::cout << "Received Camera INFO"<<std::endl;
+     // Convert the paramenter in the visp format
+     cam = visp_bridge::toVispCameraParameters(msg);
+     cam.printParameters();
+
+     // Stop the subscriber (we don't need it anymore)
+     this->sub_cam_info.shutdown();
+
+     Stream_info_camera = 1;
+     init_vs();
+
+
+ }
+
+
 
 int main(int argc, char **argv)
 {
