@@ -15,15 +15,15 @@
   </node>
 
   <!-- Joystick to pioneer robot -->
+  <!-- % rosrun demo_pioneer demo_pioneer_joy2twist_pioneer_node -->
   <node name="demo_pioneer_joy2twist_pioneer_node" pkg="demo_pioneer" type="demo_pioneer_joy2twist_pioneer_node">
   </node>
 
   <!-- 
       Pioneer robot driver
       Subscribe on topic /RosAria/cmd_vel 
-  <include file="$(optenv ROS_WORKSPACE)/mylaunch/pioneer-rosaria.launch"/>
   -->
-  <!-- % rosrun ROSARIA RosAria _port:=/dev/ttyUSB0  -->
+  <!-- % rosrun rosaria RosAria _port:=/dev/ttyUSB0  -->
   <node pkg="rosaria" type="RosAria" name="RosAria"> 
      <param name="port" value="/dev/ttyUSB0" />
   </node>
