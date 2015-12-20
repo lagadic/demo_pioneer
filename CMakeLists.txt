@@ -154,9 +154,9 @@ install(
 
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 install(FILES
-  launch/pioneer-teleop.launch
-  launch/demo-visual-servo-pioneer.launch
   launch/demo-visual-servo-pioneer-pan.launch
+  launch/demo-visual-servo-pioneer.launch
+  launch/pioneer-teleop.launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 
