@@ -24,7 +24,11 @@
   <run_depend>visp_auto_tracker</run_depend>
   <run_depend>visp_bridge</run_depend>
   <run_depend>joy</run_depend>
-  <run_depend>camera1394</run_depend>
+  
+  <!-- Additional dependencies that are used in the launch files provided as examples -->
+  <!-- for a real Pioneer equipped with a firewire camera -->
+  <!-- <run_depend>camera1394</run_depend> -->
+  <!-- <run_depend>rosaria</run_depend> -->
 
   <buildtool_depend>catkin</buildtool_depend>
 
