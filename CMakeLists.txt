@@ -10,6 +10,9 @@ find_package(catkin REQUIRED COMPONENTS
   visp_bridge
 )
 
+# Since visp_bridge doesn't propagate CMAKE_CXX_STANDARD we add the following line
+set(CMAKE_CXX_STANDARD 11)
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
